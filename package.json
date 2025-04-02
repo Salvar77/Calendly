@@ -1,0 +1,39 @@
+{
+  "name": "calendly",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "axios": "^1.8.4",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "lucide": "^0.482.0",
+    "lucide-react": "^0.482.0",
+    "mongodb": "^6.15.0",
+    "mongoose": "^8.12.1",
+    "next": "15.2.2",
+    "next-app-session": "^1.0.7",
+    "nylas": "^7.8.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-spinners": "^0.15.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
