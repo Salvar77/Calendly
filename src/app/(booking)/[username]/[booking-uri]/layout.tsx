@@ -1,5 +1,5 @@
 import { Clock, Info } from "lucide-react";
-import { ReactNode } from "react";
+import { ReactNode, use } from "react";
 import mongoose from "mongoose";
 import { ProfileModel } from "@/models/Profiles";
 import { EventTypeModel } from "@/models/EventType";
@@ -7,17 +7,19 @@ import { notFound } from "next/navigation";
 
 type LayoutProps = {
   children: ReactNode;
-  params: {
+  params: Promise<{
     username: string;
     "booking-uri": string;
-  };
+  }>;
 };
 
-export default async function BookingBoxLayout(props: LayoutProps) {
-  await mongoose.connect(process.env.MONGODB_URI as string);
+export default async function BookingBoxLayout({
+  children,
+  params,
+}: LayoutProps) {
+  const { username, "booking-uri": bookingUri } = use(params);
 
-  const username = decodeURIComponent(props.params.username);
-  const bookingUri = decodeURIComponent(props.params["booking-uri"]);
+  await mongoose.connect(process.env.MONGODB_URI as string);
 
   const profileDoc = await ProfileModel.findOne({ username });
 
@@ -59,7 +61,7 @@ export default async function BookingBoxLayout(props: LayoutProps) {
             </div>
           </div>
 
-          <div className="bg-white/80 grow p-8">{props.children}</div>
+          <div className="bg-white/80 grow p-8">{children}</div>
         </div>
       </div>
     </div>
