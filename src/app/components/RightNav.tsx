@@ -12,7 +12,7 @@ export default function RightNav({ email }: { email: string }) {
         <Link href="/dashboard" className="btn-blue">
           Dashboard
         </Link>
-        <a href="/api/logout">Logout</a>
+        <Link href="/api/logout/">Wyloguj</Link>
       </nav>
     );
   } else {

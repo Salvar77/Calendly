@@ -61,36 +61,36 @@ export default function TimePicker({
         setBusySlotsLoaded(true);
       });
     }
-  }, [selectedDay]);
+  }, [selectedDay, username]);
 
-  function withinBusySlots(datetime: Date) {
-    const bookingFrom = time;
-    const bookingTo = addMinutes(new Date(time), length);
+  // function withinBusySlots(datetime: Date) {
+  //   const bookingFrom = time;
+  //   const bookingTo = addMinutes(new Date(time), length);
 
-    let result = false;
+  //   let result = false;
 
-    for (let busySlot of busySlots) {
-      const busyFrom = new Date(parseInt(busySlot.startTime) * 1000);
-      const busyTo = new Date(parseInt(busySlot.endTime) * 1000);
-      if (
-        isAfter(bookingTo, busyFrom, busySlot, bookingFrom, bookingTo) &&
-        isBefore(bookingTo, busyTo)
-      ) {
-        return true;
-      }
-      if (isAfter(bookingTo, busyFrom) && isBefore(bookingTo, busyTo)) {
-        return true;
-      }
-      if (isEqual(bookingFrom, busyFrom)) {
-        return true;
-      }
-      if (isEqual(bookingTo, busyTo)) {
-        return true;
-      }
-    }
+  //   for (let busySlot of busySlots) {
+  //     const busyFrom = new Date(parseInt(busySlot.startTime) * 1000);
+  //     const busyTo = new Date(parseInt(busySlot.endTime) * 1000);
+  //     if (
+  //       isAfter(bookingTo, busyFrom, busySlot, bookingFrom, bookingTo) &&
+  //       isBefore(bookingTo, busyTo)
+  //     ) {
+  //       return true;
+  //     }
+  //     if (isAfter(bookingTo, busyFrom) && isBefore(bookingTo, busyTo)) {
+  //       return true;
+  //     }
+  //     if (isEqual(bookingFrom, busyFrom)) {
+  //       return true;
+  //     }
+  //     if (isEqual(bookingTo, busyTo)) {
+  //       return true;
+  //     }
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
   const firstDayOfCurrentMonth = new Date(activeYear, activeMonthIndex, 1);
   const firstDayOfCurrentMonthWeekdayIndex = getDay(firstDayOfCurrentMonth);

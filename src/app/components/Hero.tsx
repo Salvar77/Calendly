@@ -24,9 +24,9 @@ const Hero = () => {
         <br />
         for people like you
       </h1>
-      <p className="tex-gray-600">
+      <p className="text-gray-600">
         Most scheduling apps are simple but ours is even more simple. <br />
-        Ontop of this, it's open so you can see the code
+        Ontop of this, it&apos;s open so you can see the code
       </p>
       <div className="mt-4 flex gap-4 justify-center">
         <Link href={"/"} className="bg-black text-white py-2 px-4 rounded-full">

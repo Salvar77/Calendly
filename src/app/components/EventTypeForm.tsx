@@ -6,7 +6,6 @@ import clsx from "clsx";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { EventType } from "@/models/EventType";
-import { Trash } from "lucide-react";
 import EventTypeDelete from "./EventTypeDelete";
 import { weekdaysNames } from "../libs/shared";
 
@@ -25,7 +24,7 @@ export default function EventTypeForm({
   );
   const router = useRouter();
 
-  const handleSubmit = async (ev: FormEvent) => {
+  const handleSubmit = async (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     const id = doc?._id;
     const request = id ? axios.put : axios.post;
