@@ -6,7 +6,7 @@ export default function Home() {
       <Hero />
       <section className="text-center mt-36">
         <p className="text-gray-600">Trusted by those companies:</p>
-        <div className="flex gap-8 *:h-6 mt-6 justify-center">
+        <div className="flex gap-8 *:h-6 mt-5 justify-center">
           <img
             src="https://images.ctfassets.net/lh3zuq09vnm2/1FA2gEsWeu2MyGSy6Qp6ao/859833105cdd6ed5cc75eb5e4bd9cff7/HelloFresh.svg"
             alt="3"
