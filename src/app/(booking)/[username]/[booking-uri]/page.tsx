@@ -33,14 +33,12 @@ export default async function BookingPage(props: PageProps) {
     return notFound();
   }
 
-  const { uri, length, bookingTimes } = eventType;
-
   return (
     <TimePicker
       username={username}
-      meetingUri={uri}
-      length={length}
-      bookingTimes={JSON.parse(JSON.stringify(bookingTimes))}
+      meetingUri={eventType.uri}
+      length={eventType.length}
+      bookingTimes={JSON.parse(JSON.stringify(eventType.bookingTimes))}
     />
   );
 }
