@@ -24,21 +24,23 @@ export default async function BookingPage(props: PageProps) {
     return notFound();
   }
 
-  const eventType = await EventTypeModel.findOne({
+  const foundEvent = await EventTypeModel.findOne({
     email: profileDoc.email,
     uri: bookingUri,
   });
 
-  if (!eventType) {
+  if (!foundEvent) {
     return notFound();
   }
+
+  const { uri, length, bookingTimes } = foundEvent;
 
   return (
     <TimePicker
       username={username}
-      meetingUri={eventType.uri}
-      length={eventType.length}
-      bookingTimes={JSON.parse(JSON.stringify(eventType.bookingTimes))}
+      meetingUri={uri}
+      length={length}
+      bookingTimes={JSON.parse(JSON.stringify(bookingTimes))}
     />
   );
 }
