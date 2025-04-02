@@ -1,3 +1,4 @@
+import { use } from "react";
 import TimePicker from "@/app/components/TimePicker";
 import { EventTypeModel } from "@/models/EventType";
 import { ProfileModel } from "@/models/Profiles";
@@ -6,34 +7,40 @@ import { notFound } from "next/navigation";
 import { Clock, Info } from "lucide-react";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     username: string;
     "booking-uri": string;
-  };
+  }>;
   searchParams: Record<string, string>;
 };
 
-export default async function BookingPage({ params }: PageProps) {
-  await mongoose.connect(process.env.MONGODB_URI as string);
+export default function BookingPage({ params }: PageProps) {
+  const resolvedParams = use(params);
+  const username = decodeURIComponent(resolvedParams.username);
+  const bookingUri = decodeURIComponent(resolvedParams["booking-uri"]);
 
-  const username = decodeURIComponent(params.username);
-  const bookingUri = decodeURIComponent(params["booking-uri"]);
+  const dbPromise = mongoose.connect(process.env.MONGODB_URI as string);
+  const profilePromise = dbPromise.then(() =>
+    ProfileModel.findOne({ username })
+  );
 
-  const profileDoc = await ProfileModel.findOne({ username });
-  if (!profileDoc) {
-    return notFound();
-  }
-
-  const foundEvent = await EventTypeModel.findOne({
-    email: profileDoc.email,
-    uri: bookingUri,
+  const eventTypePromise = profilePromise.then((profileDoc) => {
+    if (!profileDoc) return null;
+    return EventTypeModel.findOne({
+      email: profileDoc.email,
+      uri: bookingUri,
+    });
   });
 
-  if (!foundEvent) {
+  const [profileDoc, eventType] = use(
+    Promise.all([profilePromise, eventTypePromise])
+  );
+
+  if (!profileDoc || !eventType) {
     return notFound();
   }
 
-  const { uri, length, bookingTimes, title, description } = foundEvent;
+  const { uri, length, bookingTimes, title, description } = eventType;
 
   return (
     <div className="flex flex-col items-center w-full">
