@@ -25,12 +25,12 @@ export default async function BookingBoxLayout(props: LayoutProps) {
     return notFound();
   }
 
-  const etDoc = await EventTypeModel.findOne({
+  const eventType = await EventTypeModel.findOne({
     email: profileDoc.email,
     uri: bookingUri,
   });
 
-  if (!etDoc) {
+  if (!eventType) {
     return notFound();
   }
 
@@ -43,19 +43,19 @@ export default async function BookingBoxLayout(props: LayoutProps) {
         <div className="inline-flex mx-auto shadow-md rounded-lg overflow-hidden">
           <div className="bg-blue-100/50 p-4 w-80 text-gray-800">
             <h1 className="text-left text-2xl font-bold mb-4 pb-2 border-b border-black/10">
-              {etDoc.title}
+              {eventType.title}
             </h1>
 
             <div className="grid gap-y-4 grid-cols-[40px_1fr] text-left">
               <div className="flex justify-center">
                 <Clock />
               </div>
-              <div>{etDoc.length} min</div>
+              <div>{eventType.length} min</div>
 
               <div className="flex justify-center">
                 <Info />
               </div>
-              <div>{etDoc.description}</div>
+              <div>{eventType.description}</div>
             </div>
           </div>
 
