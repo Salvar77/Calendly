@@ -47,6 +47,8 @@ export default function TimePicker({
   const [busySlots, setBusySlots] = useState<TimeSlot[]>([]);
   const [busySlotsLoaded, setBusySlotsLoaded] = useState(false);
 
+  console.log("busySlots", busySlots);
+
   useEffect(() => {
     setBusySlots([]);
     setBusySlotsLoaded(false);

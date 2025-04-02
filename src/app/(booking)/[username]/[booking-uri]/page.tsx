@@ -18,29 +18,29 @@ export default async function BookingPage(props: PageProps) {
   const username = decodeURIComponent(props.params.username);
   const bookingUri = decodeURIComponent(props.params["booking-uri"]);
 
-  const profileDoc = await ProfileModel.findOne({
-    username,
-  });
+  const profileDoc = await ProfileModel.findOne({ username });
 
   if (!profileDoc) {
     return notFound();
   }
 
-  const etDoc = await EventTypeModel.findOne({
+  const eventType = await EventTypeModel.findOne({
     email: profileDoc.email,
     uri: bookingUri,
   });
 
-  if (!etDoc) {
+  if (!eventType) {
     return notFound();
   }
 
+  const { uri, length, bookingTimes } = eventType;
+
   return (
     <TimePicker
-      username={props.params.username}
-      meetingUri={etDoc.uri}
-      length={etDoc.length}
-      bookingTimes={JSON.parse(JSON.stringify(etDoc.bookingTimes))}
+      username={username}
+      meetingUri={uri}
+      length={length}
+      bookingTimes={JSON.parse(JSON.stringify(bookingTimes))}
     />
   );
 }
