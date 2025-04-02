@@ -1,28 +1,28 @@
 import { Clock, Info } from "lucide-react";
-import { ReactNode, use } from "react";
 import mongoose from "mongoose";
 import { ProfileModel } from "@/models/Profiles";
 import { EventTypeModel } from "@/models/EventType";
 import { notFound } from "next/navigation";
+import { ReactNode } from "react";
 
 type LayoutProps = {
   children: ReactNode;
-  params: Promise<{
+  params: {
     username: string;
     "booking-uri": string;
-  }>;
+  };
 };
 
 export default async function BookingBoxLayout({
   children,
   params,
 }: LayoutProps) {
-  const { username, "booking-uri": bookingUri } = use(params);
+  const username = decodeURIComponent(params.username);
+  const bookingUri = decodeURIComponent(params["booking-uri"]);
 
   await mongoose.connect(process.env.MONGODB_URI as string);
 
   const profileDoc = await ProfileModel.findOne({ username });
-
   if (!profileDoc) {
     return notFound();
   }
