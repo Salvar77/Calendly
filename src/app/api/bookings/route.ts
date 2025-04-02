@@ -76,8 +76,8 @@ export async function POST(req: NextRequest) {
     });
 
     return Response.json(true, { status: 201 });
-  } catch (err: any) {
-    console.error("Błąd podczas rezerwacji:", err);
-    return Response.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error(error.message);
   }
 }

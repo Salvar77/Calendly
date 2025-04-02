@@ -10,7 +10,6 @@ import {
   endOfDay,
   format,
   getDay,
-  isAfter,
   isBefore,
   isEqual,
   isFuture,

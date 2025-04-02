@@ -37,11 +37,8 @@ export async function GET(req: NextRequest) {
     }
 
     return Response.json(busySlots);
-  } catch (err: any) {
-    console.error("Błąd w /api/busy:", err);
-    return Response.json(
-      { error: err.message || "Unknown error" },
-      { status: 500 }
-    );
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error(error.message);
   }
 }
