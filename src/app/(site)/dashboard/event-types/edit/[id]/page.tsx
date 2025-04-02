@@ -3,25 +3,37 @@ import { session } from "@/app/libs/session";
 import { EventTypeModel } from "@/models/EventType";
 import { ProfileModel } from "@/models/Profiles";
 import mongoose from "mongoose";
+import { use } from "react";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
+export default function EditEventTypePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const resolvedParams = use(params);
 
-export default async function EditEventTypePage({ params }: PageProps) {
-  mongoose.connect(process.env.MONGODB_URI as string);
-  const email = await session().get("email");
-  const eventTypeDoc = await EventTypeModel.findOne({ _id: params.id });
-  const profileDoc = await ProfileModel.findOne({ email });
+  const { id } = resolvedParams;
+
+  const [email, eventTypeDoc, profileDoc] = use(
+    (async () => {
+      await mongoose.connect(process.env.MONGODB_URI as string);
+      const sessionEmail = await session().get("email");
+      const event = await EventTypeModel.findOne({ _id: id });
+      const profile = await ProfileModel.findOne({ email: sessionEmail });
+      return [sessionEmail, event, profile];
+    })()
+  );
+
+  console.log(email);
+
   if (!eventTypeDoc) {
-    return "404";
+    return <div>404</div>;
   }
+
   return (
     <div>
       <EventTypeForm
-        username={profileDoc.username || ""}
+        username={profileDoc?.username || ""}
         doc={JSON.parse(JSON.stringify(eventTypeDoc))}
       />
     </div>
