@@ -14,19 +14,16 @@ export default async function EventTypesPage() {
   const eventTypes: EventType[] = await EventTypeModel.find({ email });
   const profile = await ProfileModel.findOne({ email });
 
-  EventTypeModel.find({
-    email,
-  });
   return (
     <div>
       <div className="border border-b-0 rounded-xl overflow-hidden mb-4 mt-4">
         {eventTypes.map((et) => (
-          <div className="block p-2 border-b" key={et}>
-            <Link href={"/dashboard/event-types/edit/" + et._id}>
-              {et.title}{" "}
+          <div className="block p-2 border-b" key={et._id.toString()}>
+            <Link href={`/dashboard/event-types/edit/${et._id}`}>
+              {et.title}
             </Link>
             <span className="text-gray-400 ml-4 text-sm">
-              {process.env.NEXT_PUBLIC_URL}/{profile.username}/{et.uri}
+              {process.env.NEXT_PUBLIC_URL}/{profile?.username}/{et.uri}
             </span>
           </div>
         ))}
