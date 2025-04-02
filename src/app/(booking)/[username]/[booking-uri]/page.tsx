@@ -1,46 +1,41 @@
-import { use } from "react";
 import TimePicker from "@/app/components/TimePicker";
 import { EventTypeModel } from "@/models/EventType";
 import { ProfileModel } from "@/models/Profiles";
 import mongoose from "mongoose";
 import { notFound } from "next/navigation";
 import { Clock, Info } from "lucide-react";
+import { use } from "react";
 
-type PageProps = {
-  params: Promise<{
-    username: string;
-    "booking-uri": string;
-  }>;
-  searchParams: Record<string, string>;
-};
-
-export default function BookingPage({ params }: PageProps) {
+export default function BookingPage({
+  params,
+}: {
+  params: Promise<{ username: string; "booking-uri": string }>;
+}) {
   const resolvedParams = use(params);
   const username = decodeURIComponent(resolvedParams.username);
   const bookingUri = decodeURIComponent(resolvedParams["booking-uri"]);
 
-  const dbPromise = mongoose.connect(process.env.MONGODB_URI as string);
-  const profilePromise = dbPromise.then(() =>
-    ProfileModel.findOne({ username })
+  const [profileDoc, foundEvent] = use(
+    (async () => {
+      await mongoose.connect(process.env.MONGODB_URI as string);
+
+      const profile = await ProfileModel.findOne({ username });
+      if (!profile) return [null, null];
+
+      const event = await EventTypeModel.findOne({
+        email: profile.email,
+        uri: bookingUri,
+      });
+
+      return [profile, event];
+    })()
   );
 
-  const eventTypePromise = profilePromise.then((profileDoc) => {
-    if (!profileDoc) return null;
-    return EventTypeModel.findOne({
-      email: profileDoc.email,
-      uri: bookingUri,
-    });
-  });
-
-  const [profileDoc, eventType] = use(
-    Promise.all([profilePromise, eventTypePromise])
-  );
-
-  if (!profileDoc || !eventType) {
+  if (!profileDoc || !foundEvent) {
     return notFound();
   }
 
-  const { uri, length, bookingTimes, title, description } = eventType;
+  const { uri, length, bookingTimes, title, description } = foundEvent;
 
   return (
     <div className="flex flex-col items-center w-full">
