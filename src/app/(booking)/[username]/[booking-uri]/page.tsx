@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Clock, Info } from "lucide-react";
 import { use } from "react";
 
+// @ts-ignore
 export default function BookingPage({
   params,
 }: {
