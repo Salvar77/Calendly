@@ -3,32 +3,22 @@ import { session } from "@/app/libs/session";
 import { EventTypeModel } from "@/models/EventType";
 import { ProfileModel } from "@/models/Profiles";
 import mongoose from "mongoose";
-import { use } from "react";
 
-export default function EditEventTypePage({
+export default async function EditEventTypePage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  const resolvedParams = use(params);
+  await mongoose.connect(process.env.MONGODB_URI as string);
 
-  const { id } = resolvedParams;
+  const sessionEmail = await session().get("email");
 
-  const [email, eventTypeDoc, profileDoc] = use(
-    (async () => {
-      await mongoose.connect(process.env.MONGODB_URI as string);
-      const sessionEmail = await session().get("email");
-      const event = await EventTypeModel.findOne({ _id: id });
-      const profile = await ProfileModel.findOne({ email: sessionEmail });
-      return [sessionEmail, event, profile];
-    })()
-  );
-
-  console.log(email);
-
+  const eventTypeDoc = await EventTypeModel.findOne({ _id: params.id });
   if (!eventTypeDoc) {
-    return <div>404</div>;
+    return <div>404 - EventType not found</div>;
   }
+
+  const profileDoc = await ProfileModel.findOne({ email: sessionEmail });
 
   return (
     <div>

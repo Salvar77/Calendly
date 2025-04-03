@@ -7,10 +7,11 @@ import { useParams } from "next/navigation";
 export default function BookingFormPage() {
   const params = useParams();
 
+  // Odczytujemy parametry z URL:
   const username = decodeURIComponent(params.username as string);
-  const bookingUri = decodeURIComponent(params["booking-uri"] as string);
+  const bookingUri = decodeURIComponent(params.bookingUri as string);
   const bookingTime = new Date(
-    decodeURIComponent(params["booking-time"] as string)
+    decodeURIComponent(params.bookingTime as string)
   );
 
   const [guestName, setGuestName] = useState("");
