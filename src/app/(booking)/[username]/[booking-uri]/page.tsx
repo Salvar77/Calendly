@@ -10,20 +10,16 @@ export default async function BookingPage({
 }: {
   params: { username: string; "booking-uri": string };
 }) {
-  // Pobieramy parametry
   const username = decodeURIComponent(params.username);
   const bookingUri = decodeURIComponent(params["booking-uri"]);
 
-  // Łączymy się z bazą w obrębie tego serwerowego komponentu
   await mongoose.connect(process.env.MONGODB_URI as string);
 
-  // Znajdujemy profil
   const profileDoc = await ProfileModel.findOne({ username });
   if (!profileDoc) {
     return notFound();
   }
 
-  // I event
   const foundEvent = await EventTypeModel.findOne({
     email: profileDoc.email,
     uri: bookingUri,
