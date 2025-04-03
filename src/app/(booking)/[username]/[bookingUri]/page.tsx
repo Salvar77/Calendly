@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 type PageProps = {
   params: {
     username: string;
-    "booking-uri": string;
+    bookingUri: string;
   };
 };
 export default async function BookingPage(props: PageProps) {
@@ -19,7 +19,7 @@ export default async function BookingPage(props: PageProps) {
   }
   const etDoc = await EventTypeModel.findOne({
     email: profileDoc.email,
-    uri: props.params?.["booking-uri"],
+    uri: props.params.bookingUri,
   });
   if (!etDoc) {
     return "404";

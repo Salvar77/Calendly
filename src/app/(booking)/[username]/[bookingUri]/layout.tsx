@@ -8,7 +8,7 @@ type LayoutProps = {
   children: ReactNode;
   params: {
     username: string;
-    "booking-uri": string;
+    bookingUri: string;
   };
 };
 
@@ -22,7 +22,7 @@ export default async function BookingBoxLayout(props: LayoutProps) {
   }
   const etDoc = await EventTypeModel.findOne({
     email: profileDoc.email,
-    uri: props.params?.["booking-uri"],
+    uri: props.params.bookingUri,
   });
   if (!etDoc) {
     return "404";
