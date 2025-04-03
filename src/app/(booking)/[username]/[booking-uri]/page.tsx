@@ -2,60 +2,34 @@ import TimePicker from "@/app/components/TimePicker";
 import { EventTypeModel } from "@/models/EventType";
 import { ProfileModel } from "@/models/Profiles";
 import mongoose from "mongoose";
-import { notFound } from "next/navigation";
-import { Clock, Info } from "lucide-react";
 
-export default async function BookingPage({
-  params,
-}: {
-  params: { username: string; "booking-uri": string };
-}) {
-  const username = decodeURIComponent(params.username);
-  const bookingUri = decodeURIComponent(params["booking-uri"]);
-
+type PageProps = {
+  params: {
+    username: string;
+    "booking-uri": string;
+  };
+};
+export default async function BookingPage(props: PageProps) {
   await mongoose.connect(process.env.MONGODB_URI as string);
-
-  const profileDoc = await ProfileModel.findOne({ username });
-  if (!profileDoc) {
-    return notFound();
-  }
-
-  const foundEvent = await EventTypeModel.findOne({
-    email: profileDoc.email,
-    uri: bookingUri,
+  const profileDoc = await ProfileModel.findOne({
+    username: props.params.username,
   });
-  if (!foundEvent) {
-    return notFound();
+  if (!profileDoc) {
+    return "404";
   }
-
-  const { uri, length, bookingTimes, title, description } = foundEvent;
-
+  const etDoc = await EventTypeModel.findOne({
+    email: profileDoc.email,
+    uri: props.params?.["booking-uri"],
+  });
+  if (!etDoc) {
+    return "404";
+  }
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="bg-blue-100/50 p-4 w-80 text-gray-800 mb-6 rounded shadow">
-        <h1 className="text-left text-2xl font-bold mb-4 pb-2 border-b border-black/10">
-          {title}
-        </h1>
-
-        <div className="grid gap-y-4 grid-cols-[40px_1fr] text-left">
-          <div className="flex justify-center">
-            <Clock />
-          </div>
-          <div>{length} min</div>
-
-          <div className="flex justify-center">
-            <Info />
-          </div>
-          <div>{description}</div>
-        </div>
-      </div>
-
-      <TimePicker
-        username={username}
-        meetingUri={uri}
-        length={length}
-        bookingTimes={JSON.parse(JSON.stringify(bookingTimes))}
-      />
-    </div>
+    <TimePicker
+      username={props.params.username}
+      meetingUri={etDoc.uri}
+      length={etDoc.length}
+      bookingTimes={JSON.parse(JSON.stringify(etDoc.bookingTimes))}
+    />
   );
 }
