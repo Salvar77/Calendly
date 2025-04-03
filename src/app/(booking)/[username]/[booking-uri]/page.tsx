@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { Clock, Info } from "lucide-react";
 import { use } from "react";
 
-// @ts-ignore
+// @ts-expect-error Next.js bug with Promise params
 export default function BookingPage({
   params,
 }: {
