@@ -4,35 +4,31 @@ import { ProfileModel } from "@/models/Profiles";
 import mongoose from "mongoose";
 import { notFound } from "next/navigation";
 import { Clock, Info } from "lucide-react";
-import { use } from "react";
 
-// @ts-expect-error Next.js bug with Promise params
-export default function BookingPage({
+export default async function BookingPage({
   params,
 }: {
-  params: Promise<{ username: string; "booking-uri": string }>;
+  params: { username: string; "booking-uri": string };
 }) {
-  const resolvedParams = use(params);
-  const username = decodeURIComponent(resolvedParams.username);
-  const bookingUri = decodeURIComponent(resolvedParams["booking-uri"]);
+  // Pobieramy parametry
+  const username = decodeURIComponent(params.username);
+  const bookingUri = decodeURIComponent(params["booking-uri"]);
 
-  const [profileDoc, foundEvent] = use(
-    (async () => {
-      await mongoose.connect(process.env.MONGODB_URI as string);
+  // Łączymy się z bazą w obrębie tego serwerowego komponentu
+  await mongoose.connect(process.env.MONGODB_URI as string);
 
-      const profile = await ProfileModel.findOne({ username });
-      if (!profile) return [null, null];
+  // Znajdujemy profil
+  const profileDoc = await ProfileModel.findOne({ username });
+  if (!profileDoc) {
+    return notFound();
+  }
 
-      const event = await EventTypeModel.findOne({
-        email: profile.email,
-        uri: bookingUri,
-      });
-
-      return [profile, event];
-    })()
-  );
-
-  if (!profileDoc || !foundEvent) {
+  // I event
+  const foundEvent = await EventTypeModel.findOne({
+    email: profileDoc.email,
+    uri: bookingUri,
+  });
+  if (!foundEvent) {
     return notFound();
   }
 
